@@ -1,6 +1,3 @@
 #not clean in case we want to change the names of binaries, but it doesn't seem like a simple problem so I'll leave it like this
 getTransactions
 calculateUserGraph
-
-#don't want to track program output
-outputs/

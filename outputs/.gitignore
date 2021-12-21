@@ -1,0 +1,4 @@
+#don't want to anything in this file
+*
+#except the .gitignore
+!.gitignore
