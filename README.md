@@ -40,7 +40,7 @@ I want to thank Professor Alex Thomo for helping and guiding me throughout the t
 
 <h2>Sample</h2>
 
-A sample graph obtained from transactions 670001-700000 can be found <a href="https://drive.google.com/file/d/1dgRzjyYs-iBvQ_JzQK8175NqWLZMJGgV/view?usp=sharing">here</a>. 
+A sample graph obtained from transactions 670001-700000 can be found <a href="https://drive.google.com/file/d/1dgRzjyYs-iBvQ_JzQK8175NqWLZMJGgV/view?usp=sharing">here</a> (2.6 GB). 
 
 <h2>References</h2>
 
