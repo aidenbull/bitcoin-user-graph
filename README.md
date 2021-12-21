@@ -38,6 +38,10 @@ The `<filename>`  used here should be identical to the one used when executing `
 
 I want to thank Professor Alex Thomo for helping and guiding me throughout the term, this project would not have been completed without his help.
 
+<h2>Sample</h2>
+
+A sample graph obtained from transactions 670001-700000 can be found <a href="https://drive.google.com/file/d/1dgRzjyYs-iBvQ_JzQK8175NqWLZMJGgV/view?usp=sharing">here</a>. 
+
 <h2>References</h2>
 
 [1] - Di Francesco Maesa, D., Marino, A. & Ricci, L. Data-driven analysis of Bitcoin properties: exploiting the users graph. Int J Data Sci Anal 6, 63–80 (2018). https://doi-org.ezproxy.library.uvic.ca/10.1007/s41060-017-0074-x 
