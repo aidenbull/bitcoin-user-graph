@@ -20,12 +20,18 @@ Some simple graph statistics were also obtained using R with the igraph library.
 
 Running `make` will generate two binary files: `getTransactions` and `calculateUserGraph`. The files `getTransactions.cpp` and `calculateUserGraph.cpp` contain comments at the beginning describing usage and output in detail. Please refer to these comments for detailed info.
 
+
 `getTransactions` is the program that obtains transaction info. As mentioned in the requirements section, it requires Bitcoin Core to be installed and running. Simple usage for `getTransactions` is as follows: 
-    `getTransactions <start_block_index> <end_block_index> <filename>`
+
+`getTransactions <start_block_index> <end_block_index> <filename>`
+
 This will produce two files in the `output/` directory: `transactions-<filename>.txt` and `transactionStoreLog-<filename>.txt`. The first file contains the transaction info required for producing the user graph. The second file contains info that will be useful for resuming where you left off if `getTransactions` is interrupted for any reason.
 
+
 `calculateUserGraph` is the program that computes a user graph using transaction info obtained from `getTransactions`. Usage for `calculateUserGraph` is as follows:
-    `getTransactions <filename>`
+
+`getTransactions <filename>`
+
 The `<filename>`  used here should be identical to the one used when executing `getTransactions`. This program will read transaction info from the `transactions-<filename>.txt` file, and use it to produce 2 files: `usergraph-<filename>.txt` and `stats-<filename>.txt`. The first file contains an edge list for the user graph obtained from the input transactions. The second file contains some simple statistics about the resulting user graph.
 
 <h2>Thanks</h2>
