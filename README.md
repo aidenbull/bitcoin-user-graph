@@ -46,6 +46,7 @@ I want to thank Professor Alex Thomo for helping and guiding me throughout the t
 
 Feel free to use and distribute my code as you see fit if it seems that it will be helpful to you. If you have any questions about the code feel free to post an issue on the github repo or to contact me at `aidenbull@hotmail.com`
 
+-
 
 The following license is copied from the license section of nlohmann's json github repository. It is included here because the library was used in this project.
 
