@@ -32,7 +32,7 @@ This will produce two files in the `output/` directory: `transactions-<filename>
 
 `getTransactions <filename>`
 
-The `<filename>`  used here should be identical to the one used when executing `getTransactions`. This program will read transaction info from the `transactions-<filename>.txt` file, and use it to produce 2 files: `usergraph-<filename>.txt` and `stats-<filename>.txt`. The first file contains an edge list for the user graph obtained from the input transactions. The second file contains some simple statistics about the resulting user graph.
+The `<filename>`  used here should be identical to the one used when executing `getTransactions`. This program will read transaction info from the `transactions-<filename>.txt` file, and use it to produce 2 files: `userGraph-<filename>.txt` and `stats-<filename>.txt`. The first file contains an edge list for the user graph obtained from the input transactions. The second file contains some simple statistics about the resulting user graph.
 
 <h2>Thanks</h2>
 
