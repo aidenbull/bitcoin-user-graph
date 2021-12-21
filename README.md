@@ -7,6 +7,7 @@ Simple c++ implementation for obtaining transaction data Bitcoin Core and using 
 Created for my CSC499 honours project at UVic. The goal of this project was to compute a user graph using modern transaction data and then compare the results to those found in a study by Maesa et al. from 2017 [1]. The algorithm used to compute the user graph is also based off the one described in that paper.
 
 <h2>Requirements</h2>
+
 Requires c++17 to be installed on the system. 
 
 Obtaining transaction info requires a full index Bitcoin Core node to be present and running on the computer. At the time of writing, a full index node consumes around 500GB of disk space. Obtaining transaction info also requires the libcurl library to be installed. Computing the user graph does not require Bitcoin Core or libcurl.
