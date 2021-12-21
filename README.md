@@ -18,7 +18,7 @@ Some simple graph statistics were also obtained using R with the igraph library.
 
 <h2>Usage</h2>
 
-Running `make` will generate two binary files: `getTransactions` and `calculateUserGraph`. These files contain comments at the beginning of the file describing usage and output in detail. Please refer to these comments for detailed info.
+Running `make` will generate two binary files: `getTransactions` and `calculateUserGraph`. The files `getTransactions.cpp` and `calculateUserGraph.cpp` contain comments at the beginning describing usage and output in detail. Please refer to these comments for detailed info.
 
 `getTransactions` is the program that obtains transaction info. As mentioned in the requirements section, it requires Bitcoin Core to be installed and running. Simple usage for `getTransactions` is as follows: 
     `getTransactions <start_block_index> <end_block_index> <filename>`
