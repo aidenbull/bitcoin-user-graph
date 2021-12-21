@@ -9,7 +9,7 @@ Created for my CSC499 honours project at UVic. The goal of this project was to c
 <h2>Requirements</h2>
 Requires c++17 to be installed on the system. 
 
-Obtaining transaction info requires a full index Bitcoin Core node to be present and running on the computer. At the time of writing, a full index node consumes around 500GB of disk space. It also requires libcurl to be installed. Computing the user graph does not require Bitcoin Core or libcurl.
+Obtaining transaction info requires a full index Bitcoin Core node to be present and running on the computer. At the time of writing, a full index node consumes around 500GB of disk space. Obtaining transaction info also requires the libcurl library to be installed. Computing the user graph does not require Bitcoin Core or libcurl.
 
 Makes use of <a href="https://github.com/nlohmann/json">nlohmann's JSON library</a>. This library contained a bug with c++17 at the time of writing which caused the program to fail, so a simple workaround was added. The modified library is included in the `include/` directory.
 
