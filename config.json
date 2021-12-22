@@ -1,0 +1,9 @@
+{
+    "rpcuser":"",
+    "rpcpassword":"",
+    "chunkSize":2,
+    "cacheSize":10000000,
+    "cacheClearSize":2000000,
+    "fifoQueueSize":50000000,
+    "fifoClearSize":10000000
+}

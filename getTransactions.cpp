@@ -1,5 +1,5 @@
 /*
- * USAGE: ./getTransactions <start_block_index> <end_block_index> <filename> <chunksize=2>
+ * USAGE: ./getTransactions <start_block_index> <end_block_index> <filename>
  *
  * Parses the blockchain from <start_block_index> inclusive to <end_block_index> inclusive, and stores all transactions it finds in
  * json form in a file called "transactions-<filename>.txt". If such a file already exists, it appends to the existing file.
@@ -8,8 +8,15 @@
  * you can continue collecting from that point. If this does occur, note that you will need to update <start_block_index>
  * according to the output in the log.
  *
- * <chunksize> is an optional argument that defaults to 2 which indicates how many blocks will be requested at each step. 
- * This option is unlikely to impact performance in any meaningful way, and is mostly valuable for reducing command line output.
+ * getTransactions sets some values according to the values in config.json. rpcuser and rpcpassword are the most important settings.
+ * rpcuser and rpcpassword are required credentials for performing RPCs from bitcoin core. These values should match the values assigned 
+ * by you in .bitcoin/bitcoin.conf. Other values in config.json include chunkSize, which indicates how many blocks are requested and processed
+ * in each step, as well as the four values cacheSize, cacheClearSize, fifoQueueSize, and fifoClearSize. cacheSize indicates the maximum amount
+ * of transaction outputs that can be cached at once. fifoQueueSize indicates the maximum amount of transaction outputs that can be stored in the
+ * cache's fifo queue. The size of the fifo queue essentially correlates with the maximum age of a transaction output before it is removed from 
+ * the cache. cacheClearSize and fifoClearSize indicates how many elements are removed from the corresponding data structure when it reaches its max
+ * size. If you find that getTransactions is consuming too much memory, reducing some of the cache values should help at the potential cost of execution
+ * time.
  */
 
 
@@ -121,6 +128,7 @@ class SimpleCache
 SimpleCache TxCache;
 int cacheMisses = 0;
 int cacheHits = 0;
+string BITCOIN_URL;
 
 //Formats a json rpc given a method and parameters. Because each parameter may or may not require quotes in the json rpc, i decided to leave them
 // as a single string
@@ -128,6 +136,9 @@ string FormatRPC(string method, string params)
 {
     return "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"" + method + "\", \"params\": " + params + "}";
 }
+
+
+//WriteCallback and PerformRPC were referenced from https://www.youtube.com/watch?v=nbTaHEocCuo
 
 //Receives data from an RPC and appends the response to the userpointer string
 size_t WriteCallback(char *content, size_t size, size_t nmemb, void *userpointer)
@@ -146,7 +157,7 @@ void PerformRPC(string rpc, string* userPointer)
 
     curl = curl_easy_init();
     if (curl){
-        curl_easy_setopt(curl, CURLOPT_URL, "http://aiden:5eiOEbJkAwiYx2gpWOag7YF5Lag@127.0.0.1:8332/");
+        curl_easy_setopt(curl, CURLOPT_URL, BITCOIN_URL.c_str());
         curl_easy_setopt(curl, CURLOPT_POST, 1);
         //Assign our RPC to the post fields (don't forget to use a c string, not a c++ string (oops))
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, rpc.c_str());
@@ -474,6 +485,7 @@ int main(int argc, char **argv)
 {
     curl_global_init(CURL_GLOBAL_ALL);
 
+    //Handling command line inputs...
     //Expecting format getTransactions <start_block_index> <end_block_index> <filename>
     if (argc < 4)
     {
@@ -507,28 +519,31 @@ int main(int argc, char **argv)
 
     string filename = argv[3];
 
-    int chunkSize = 2;
-    if(argc > 4)
-    {
-        try
-        {
-            //using stoi instead of atoi to avoid undefined behaviour
-            chunkSize = stoi(string(argv[4]));
-        }
-        catch (const std::invalid_argument& ia)
-        {
-            cout << "Error, argument 4 is not an integer" << endl;
-            return -1;
-        }
-    }
+    //Reading config file
+    ifstream is("config.json", ifstream::in);
+    ostringstream strstream;
+    strstream << is.rdbuf();
+    json config = json::parse(strstream.str());
+    is.close();
 
-    //You may need to update these values depending on how much memory you have available. The queue size in particular is a good place to
+    //Assigning config file values
+    string rpcuser = config["rpcuser"];
+    string rpcpassword = config["rpcpassword"];
+    if (rpcuser.empty() || rpcpassword.empty()) 
+    {
+        cout << "Error. Bitcoin Core username and password not set in config.json. Set rpcuser and rpcpassword options according to the values in .bitcoin/bitcoin.conf https://github.com/bitcoin/bitcoin/blob/master/share/examples/bitcoin.conf" << endl; 
+        return -1;
+    }
+    BITCOIN_URL = "http://" + rpcuser + ":" + rpcpassword + "@127.0.0.1:8332/";
+    int chunkSize = config["chunkSize"];
+    //You may need to update these following values depending on how much memory you have available. The queue size in particular is a good place to
     // cut back if you're experiencing high memory usage.
-    int CACHE_SIZE = 10000000;
-    int CACHE_CLEAR_SIZE = 2000000;
-    int FIFO_QUEUE_SIZE = 50000000;
-    int FIFO_CLEAR_SIZE = 10000000;
-    TxCache.Init(CACHE_SIZE, CACHE_CLEAR_SIZE, FIFO_QUEUE_SIZE, FIFO_CLEAR_SIZE);
+    int cacheSize = config["cacheSize"];
+    int cacheClearSize = config["cacheClearSize"];
+    int fifoQueueSize = config["fifoQueueSize"];
+    int fifoClearSize = config["fifoClearSize"];
+
+    TxCache.Init(cacheSize, cacheClearSize, fifoQueueSize, fifoClearSize);
 
     for(int i=startIndex; i<=endIndex; i+=chunkSize)
     {
