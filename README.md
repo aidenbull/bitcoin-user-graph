@@ -25,7 +25,7 @@ Running `make` will generate two binary files: `getTransactions` and `calculateU
 
 `getTransactions <start_block_index> <end_block_index> <filename>`
 
-This will produce two files in the `output/` directory: `transactions-<filename>.txt` and `transactionStoreLog-<filename>.txt`. The first file contains the transaction info required for producing the user graph. The second file contains info that will be useful for resuming where you left off if `getTransactions` is interrupted for any reason.
+This will produce two files in the `output/` directory: `transactions-<filename>.txt` and `transactionStoreLog-<filename>.txt`. The first file contains the transaction info required for producing the user graph. The second file contains info that will be useful for resuming where you left off if `getTransactions` is interrupted for any reason. `getTransactions` also reads some input from `config.json`. The values in `config.json` are values that likely won't need to be changed between executions. Important values that need to be set are rpcuser and rpcpassword. These values are required for interfacing with Bitcoin Core, and should match the values stored in .bitcoin/bitcoin.conf. See <a href="https://github.com/bitcoin/bitcoin/blob/master/share/examples/bitcoin.conf">rpcuser and rpcpassword</a> for more info. 
 
 
 `calculateUserGraph` is the program that computes a user graph using transaction info obtained from `getTransactions`. Usage for `calculateUserGraph` is as follows:
