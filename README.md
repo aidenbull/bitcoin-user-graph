@@ -10,15 +10,45 @@ Created for my CSC499 honours project at UVic. The goal of this project was to c
 
 Requires c++17 to be installed on the system. 
 
-Obtaining transaction info requires a full index Bitcoin Core node to be present and running on the computer. At the time of writing, a full index node consumes around 500GB of disk space. Obtaining transaction info also requires the libcurl library to be installed. Computing the user graph does not require Bitcoin Core or libcurl.
+Obtaining transaction info requires a full index Bitcoin Core node to be present and running on the computer. At the time of writing, a completely synced full index node consumes around 500GB of disk space. Obtaining transaction info also requires the libcurl-dev package to be installed. Computing the user graph does not require Bitcoin Core or libcurl.
 
 Makes use of <a href="https://github.com/nlohmann/json">nlohmann's JSON library</a>. This library contained a bug with c++17 at the time of writing which caused the program to fail, so a simple workaround was added. The modified library is included in the `include/` directory.
 
 Some simple graph statistics were also obtained using R with the igraph library. This script is included in the `r/` directory.
 
+
+<h5>PreReq installation guide</h5>
+
+The following guides are designed for a debian environment, as this is what the project was produced and tested in.
+
+
+Bitcoin Core:
+
+Bitcoin Core can be downloaded <a href="">here</a>. In order to install it, first choose which version you would like to use, and download the appropriate tar.gz for your computer architecture. This project was developed using Bitcoin Core 0.21.1, but any more recent version should work fine.
+
+Once you've downloaded the package, unzip it, and then open a terminal inside the resulting directory. To install it, execute the following command:
+
+`sudo install -m 0755 -o root -g root -t /usr/local/bin bin/*`
+
+The command will copy the components from the local bin directory into /usr/local/bin, where they can be executed from anywhere, as well as set permission options for the copied files.
+
+Once the files have been installed, run `bitcoind` for the first time. This will start up a bitcoin P2P node from your computer, and your computer will begin collecting block data from nearby peers. Running `bitcoind` for the first time will also generate a folder called `.bitcoin` in your home directory. Once this folder has been created, shut down bitcoin core using ctrl-c interrupt or by opening another terminal and executing the command `bitcoin-cli stop`. Now, you will need to create a config file for Bitcoin Core, the default config file that Bitcoin Core checks on startup is `.bitcoin/bitcoin.conf`. Bitcoin Core does not create this file automatically, and so you must do this yourself. The format for this config file can be seen <a href="">here</a>. For this project, you will need to set the following options: `txindex=1`, `server=1`, `rpcuser=<YOUR-USERNAME>`, and `rpcpassword=<YOUR-SECURE-PASSWORD>`. Once these options have been set, Bitcoin Core is now installed and set up. Now you can run `bitcoind` to let Bitcoin Core sync. 
+
+WARNING! - Running a bitcoin node can consume up to 500GB of storage at the time of writing. It can also consume a large amount of network data quickly. If your internet setup is data-limited, running this program for an extended period of time can lead to charges. If at any point you want to use Bitcoin Core without acting as a P2P node, run `bitcoind`, and then in another terminal, execute `bitcoin-cli setnetworkactive false`. This will stop all peer to peer activity, but still allow you to use Bitcoin Core locally. This project does not require a fully synced node to work, but it does require the node to be synced up to the block height that you are interested in analyzing.
+
+
+libcurl-dev:
+
+Installing libcurl-dev can be done using apt install. libcurl-dev is a virtual package, and because of this, you will have to choose a specific implementation from a list. These options can be seen by executing the following command:
+
+`sudo apt install libcurl-dev`
+
+One of these options can then be selected by running the same apt install command, but with the name of the implementation you choose instead of 'libcurl-dev'. The project was developed using `libcurl4-openssl-dev`, but any of the options should work fine.
+
+
 <h2>Usage</h2>
 
-Running `make` will generate two binary files: `getTransactions` and `calculateUserGraph`. The files `getTransactions.cpp` and `calculateUserGraph.cpp` contain comments at the beginning describing usage and output in detail. Please refer to these comments for detailed info.
+Running `make` will generate two binary files: `getTransactions` and `calculateUserGraph`. The files `getTransactions.cpp` and `calculateUserGraph.cpp` contain comments at the beginning describing usage and output in detail. Please refer to these comments for more detailed info.
 
 
 `getTransactions` is the program that obtains transaction info. As mentioned in the requirements section, it requires Bitcoin Core to be installed and running. Simple usage for `getTransactions` is as follows: 
