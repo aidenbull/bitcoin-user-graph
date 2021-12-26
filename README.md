@@ -17,7 +17,7 @@ Makes use of <a href="https://github.com/nlohmann/json">nlohmann's JSON library<
 Some simple graph statistics were also obtained using R with the igraph library. This script is included in the `r/` directory.
 
 
-<h5>PreReq installation guide</h5>
+<h3>PreReq installation guide</h3>
 
 The following guide is designed for Debian-based systems. Some steps may be different for other operating systems.
 
