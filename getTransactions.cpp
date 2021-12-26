@@ -17,6 +17,9 @@
  * the cache. cacheClearSize and fifoClearSize indicates how many elements are removed from the corresponding data structure when it reaches its max
  * size. If you find that getTransactions is consuming too much memory, reducing some of the cache values should help at the potential cost of execution
  * time.
+ *
+ * Running this program requires Bitcoin Core to be running and synced at least up to <end_block_index>. If you want to run Bitcoin Core without 
+ * using network data, execute 'bitcoin-cli setnetworkactive false' in a terminal to stop P2P activity.
  */
 
 
