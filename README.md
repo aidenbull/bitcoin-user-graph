@@ -22,7 +22,7 @@ Some simple graph statistics were also obtained using R with the igraph library.
 The following guide is designed for Debian-based systems. Some steps may be different for other operating systems.
 
 
-Bitcoin Core:
+<h5>Bitcoin Core:</h5>
 
 Bitcoin Core can be downloaded <a href="https://bitcoin.org/en/version-history">here</a>. In order to install it, first choose which version you would like to use, and download the appropriate tar.gz for your computer architecture. This project was developed using Bitcoin Core 0.21.1, but any more recent version should work fine.
 
@@ -37,7 +37,7 @@ Once the files have been installed, run `bitcoind` for the first time. This will
 WARNING! - Running a bitcoin node can consume up to 500GB of storage at the time of writing. It can also consume a large amount of network data quickly. If your internet setup is data-limited, running this program for an extended period of time can lead to charges. If at any point you want to use Bitcoin Core without acting as a P2P node, run `bitcoind`, and then in another terminal, execute `bitcoin-cli setnetworkactive false`. This will stop all peer to peer activity, but still allow you to use Bitcoin Core locally. This project does not require a fully synced node to work, but it does require the node to be synced up to the block height that you are interested in analyzing.
 
 
-libcurl-dev:
+<h5>libcurl-dev:</h5>
 
 Installing libcurl-dev can be done using apt install. libcurl-dev is a virtual package, and because of this, you will have to choose a specific implementation from a list. These options can be seen by executing the following command:
 
