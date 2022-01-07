@@ -139,12 +139,12 @@ vector<int> CalculateAndStoreLargestClusters(vector<vector<int>> clusters)
 
 //Calculates the value flowing into and out of every user graph cluster and returns a vector parallel to userGraphEdges
 // containing these values
-vector<pair<float, float>> CalculateClusterRichness(vector<unordered_map<int, float>> userGraphEdges)
+vector<pair<float, float>> CalculateClusterRichness(vector<vector<pair<int, float>>> userGraphEdges)
 {
     vector<pair<float, float>> clusterValues(userGraphEdges.size());
     for(size_t i=0; i<userGraphEdges.size(); i++)
     {
-        unordered_map<int, float> payer = userGraphEdges[i];
+        vector<pair<int, float>> payer = userGraphEdges[i];
         for(auto payee : payer)
         {
             int cluster = payee.first;
@@ -180,7 +180,7 @@ void ReorderRichestClusterList(vector<pair<int, pair<float, float>>>* richestClu
 
 //Calculates the 10 richest clusters according to amount of value going into the cluster minus the amount of value
 // coming out of the cluster. Returns a vector storing first the cluster id, then a pair containing value in and value out
-vector<pair<int, pair<float, float>>> CalculateRichestClusters(vector<unordered_map<int, float>> userGraphEdges)
+vector<pair<int, pair<float, float>>> CalculateRichestClusters(vector<vector<pair<int, float>>> userGraphEdges)
 {
     vector<pair<float, float>> clusterValues = CalculateClusterRichness(userGraphEdges);
     
@@ -208,7 +208,7 @@ vector<pair<int, pair<float, float>>> CalculateRichestClusters(vector<unordered_
 //Collects various basic statistics about a user graph and outputs the statistics to a file called "stats-<filename>.txt". Statistics included are:
 // number of transactions, number of unique addresses, number of clusters, largest clusters by address count, number of user graph edges,
 // and richest clusters according to value in - value out
-void PrintStatsToFile(string filename, vector<lightTransaction> txs, vector<string> addresses, vector<vector<int>> clusters, vector<unordered_map<int, float>> userGraphEdges)
+void PrintStatsToFile(string filename, vector<lightTransaction> txs, vector<string> addresses, vector<vector<int>> clusters, vector<vector<pair<int, float>>> userGraphEdges)
 {
     ofstream os ("outputs/stats-" + filename + ".txt", ifstream::out);
 
@@ -229,7 +229,7 @@ void PrintStatsToFile(string filename, vector<lightTransaction> txs, vector<stri
 
     int numEdges = 0;
 
-    for(unordered_map<int, float> cluster : userGraphEdges)
+    for(vector<pair<int, float>> cluster : userGraphEdges)
     {
         numEdges += cluster.size();
     }
@@ -276,10 +276,11 @@ int main(int argc, char** argv)
     tie(clusters, clusterMap) = FindClusters(addresses, lightTxs);
     cout << "Done" << endl;
 
-    vector<unordered_map<int, float>> userGraphEdges;
+    vector<vector<pair<int, float>>> userGraphEdges;
 
     cout << "Calculating usergraph... " << flush;
-    userGraphEdges = CreateAndDumpUserGraph(&clusters, &clusterMap, lightTxs);
+    //Set the last parameter to true if you want a multi graph, and false if you want a standard graph
+    userGraphEdges = CreateUserGraph(&clusters, &clusterMap, lightTxs, false);
     cout << "Done" << endl;
 
     cout << "Writing stats to file... " << flush;
@@ -291,7 +292,7 @@ int main(int argc, char** argv)
     os << "from to weight" << endl;
     for(size_t i=0; i<userGraphEdges.size(); i++)
     {
-        unordered_map<int, float> edges = userGraphEdges[i];
+        vector<pair<int, float>> edges = userGraphEdges[i];
         for (auto const& [key, val] : edges)
         {
             os << i << " " << key << " " << val << endl;
