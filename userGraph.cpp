@@ -121,8 +121,8 @@ class UserGraph
         vector<vector<int>> _clusters;
         vector<int> _clusterMap;
         vector<unordered_map<int, float>> _weightedAdjList;
-        //Just included because the paper that I wanted to compare data to had parallel edges for some statistics
 	    vector<vector<pair<int, float>>> _multiGraphWeightedAdjList;
+        bool _multiGraph;
 
         //Updates _weightedAdjList
         void AddOrUpdateWeightedEdge(int v1, int v2, float value)
@@ -147,7 +147,8 @@ class UserGraph
             : _clusters{*clusters},
               _clusterMap{*clusterMap},
               _weightedAdjList{(*clusters).size()},
-              _multiGraphWeightedAdjList{(*clusters).size()}
+              _multiGraphWeightedAdjList{(*clusters).size()},
+              _multiGraph{multiGraph}
         { 
             for (lightTransaction tx : txs)
             {   
@@ -158,13 +159,13 @@ class UserGraph
                 for (lightTxOutput output : tx.outputs)
                 {
                     int outputCluster = _clusterMap[output.address];
-                    if (!multiGraph)
+                    if (_multiGraph)
                     {
-                        AddOrUpdateWeightedEdge(inputCluster, outputCluster, output.value);
+                        AddWeightedEdge(inputCluster, outputCluster, output.value);
                     }
                     else
                     {
-                        AddWeightedEdge(inputCluster, outputCluster, output.value);
+                        AddOrUpdateWeightedEdge(inputCluster, outputCluster, output.value);
                     }
                 }
             }
@@ -183,6 +184,18 @@ class UserGraph
         //Need to convert unordered maps to vector<pair<int, float>> to keep consistent with multi graph output
         vector<vector<pair<int, float>>> GetEdges()
         {
+            if(_multiGraph)
+            {
+                return GetMultiGraphEdges();
+            }
+            else
+            {
+                return GetGraphEdges();
+            }
+        }
+
+        vector<vector<pair<int, float>>> GetGraphEdges()
+        {
             vector<vector<pair<int, float>>> adjList;
             for(unordered_map<int, float> map : _weightedAdjList)
             {
@@ -199,16 +212,16 @@ class UserGraph
 };
 
 //Creates the user graph given a vector of clusters, a map from address to cluster, and a vector of transactions
-UserGraph CreateUserGraph(vector<vector<int>>* clusters, vector<int>* clusterMap, vector<lightTransaction> txs, multiGraph=true)
+UserGraph CreateUserGraph(vector<vector<int>>* clusters, vector<int>* clusterMap, vector<lightTransaction> txs, bool multiGraph=true)
 {
     UserGraph userGraph(clusters, clusterMap, txs, multiGraph);
     return userGraph;
 }
 
 //Calls CreateUserGraph and returns the edges from the resulting graph
-vector<vector<pair<int, float>>> CreateAndDumpUserGraph(vector<vector<int>>* clusters, vector<int>* clusterMap, vector<lightTransaction> txs)
+vector<vector<pair<int, float>>> CreateAndDumpUserGraph(vector<vector<int>>* clusters, vector<int>* clusterMap, vector<lightTransaction> txs, bool multiGraph=true)
 {   
-    UserGraph userGraph = CreateUserGraph(clusters, clusterMap, txs);
+    UserGraph userGraph = CreateUserGraph(clusters, clusterMap, txs, multiGraph);
     
     return userGraph.GetEdges();
 }

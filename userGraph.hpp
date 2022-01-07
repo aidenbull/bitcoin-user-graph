@@ -44,12 +44,12 @@ class UserGraph
 
         std::vector<int> GetClusterMap();
 
-        std::vector<std::unordered_map<int, float>> GetEdges();
+        std::vector<std::vector<std::pair<int, float>>> GetEdges();
 };
 
-UserGraph CreateUserGraph(std::vector<std::vector<int>>* clusters, std::vector<int>* clusterMap, std::vector<lightTransaction> txs);
+UserGraph CreateUserGraph(std::vector<std::vector<int>>* clusters, std::vector<int>* clusterMap, std::vector<lightTransaction> txs, bool multiGraph=true);
 
-std::vector<std::unordered_map<int, float>> CreateAndDumpUserGraph(std::vector<std::vector<int>>* clusters, std::vector<int>* clusterMap, std::vector<lightTransaction> txs);
+std::vector<std::vector<std::pair<int, float>>> CreateAndDumpUserGraph(std::vector<std::vector<int>>* clusters, std::vector<int>* clusterMap, std::vector<lightTransaction> txs, bool multiGraph=true);
 
 std::pair<std::vector<std::vector<int>>, std::vector<int>> FindClusters(std::vector<std::string> addresses, std::vector<lightTransaction> txs);
 
