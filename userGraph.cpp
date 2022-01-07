@@ -122,7 +122,7 @@ class UserGraph
         vector<int> _clusterMap;
         vector<unordered_map<int, float>> _weightedAdjList;
 	    vector<vector<pair<int, float>>> _multiGraphWeightedAdjList;
-        bool _multiGraph;
+        bool _isMultiGraph;
 
         //Updates _weightedAdjList
         void AddOrUpdateWeightedEdge(int v1, int v2, float value)
@@ -143,12 +143,12 @@ class UserGraph
         }
 
     public:
-        UserGraph(vector<vector<int>>* clusters, vector<int> *clusterMap, vector<lightTransaction> txs, bool multiGraph=true)
+        UserGraph(vector<vector<int>>* clusters, vector<int> *clusterMap, vector<lightTransaction> txs, bool isMultiGraph=true)
             : _clusters{*clusters},
               _clusterMap{*clusterMap},
               _weightedAdjList{(*clusters).size()},
               _multiGraphWeightedAdjList{(*clusters).size()},
-              _multiGraph{multiGraph}
+              _isMultiGraph{isMultiGraph}
         { 
             for (lightTransaction tx : txs)
             {   
@@ -159,7 +159,7 @@ class UserGraph
                 for (lightTxOutput output : tx.outputs)
                 {
                     int outputCluster = _clusterMap[output.address];
-                    if (_multiGraph)
+                    if (_isMultiGraph)
                     {
                         AddWeightedEdge(inputCluster, outputCluster, output.value);
                     }
@@ -184,7 +184,7 @@ class UserGraph
         //Need to convert unordered maps to vector<pair<int, float>> to keep consistent with multi graph output
         vector<vector<pair<int, float>>> GetEdges()
         {
-            if(_multiGraph)
+            if(_isMultiGraph)
             {
                 return GetMultiGraphEdges();
             }
@@ -211,17 +211,11 @@ class UserGraph
         }
 };
 
-//Creates the user graph given a vector of clusters, a map from address to cluster, and a vector of transactions
-UserGraph CreateUserGraph(vector<vector<int>>* clusters, vector<int>* clusterMap, vector<lightTransaction> txs, bool multiGraph=true)
-{
-    UserGraph userGraph(clusters, clusterMap, txs, multiGraph);
-    return userGraph;
-}
 
-//Calls CreateUserGraph and returns the edges from the resulting graph
-vector<vector<pair<int, float>>> CreateAndDumpUserGraph(vector<vector<int>>* clusters, vector<int>* clusterMap, vector<lightTransaction> txs, bool multiGraph=true)
+//Creates the user graph given a vector of clusters, a map from address to cluster, and a vector of transactions and returns the edges from the resulting graph
+vector<vector<pair<int, float>>> CreateUserGraph(vector<vector<int>>* clusters, vector<int>* clusterMap, vector<lightTransaction> txs, bool isMultiGraph=true)
 {   
-    UserGraph userGraph = CreateUserGraph(clusters, clusterMap, txs, multiGraph);
+    UserGraph userGraph(clusters, clusterMap, txs, isMultiGraph);
     
     return userGraph.GetEdges();
 }

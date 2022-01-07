@@ -279,7 +279,8 @@ int main(int argc, char** argv)
     vector<vector<pair<int, float>>> userGraphEdges;
 
     cout << "Calculating usergraph... " << flush;
-    userGraphEdges = CreateAndDumpUserGraph(&clusters, &clusterMap, lightTxs, false);
+    //Set the last parameter to true if you want a multi graph, and false if you want a standard graph
+    userGraphEdges = CreateUserGraph(&clusters, &clusterMap, lightTxs, false);
     cout << "Done" << endl;
 
     cout << "Writing stats to file... " << flush;
